@@ -14,10 +14,16 @@ const gameBoard = (() => {
         // [null, null, null],
         // [null, null, null]
 
-        [null, null, null],
-        [null, null, null],
-        [null, null, null]
+        ["X", "X", "X"],
+        ["X", "X", "X"],
+        ["X", "X", "X"]
     ]
+
+    function areAllCellsOccupied(){
+        let flatArr = board.flat()
+        const hasOorX = (sign) => sign === "X" || sign === "O"
+        return flatArr.every(hasOorX)
+    }
 
     function takeUserChoice(row, column, sign){
         if(checkIfCellEmpty(row,column)){
@@ -26,6 +32,7 @@ const gameBoard = (() => {
             console.error("This cell is already occupied");
             
         }
+
     }
 
     function checkIfCellEmpty(row,column){
@@ -59,9 +66,6 @@ const gameBoard = (() => {
     function gameWon(){
         return isRowWin() || isColumnWin() || isLeftToRightDiagonalWin() || isRightToLeftDiagonalWin()
     }
-
-
-
 
     function hasWon (tempArr){
         function isSame(currentValue){
@@ -109,7 +113,6 @@ const gameBoard = (() => {
         return isWin
     }
 
-
     function isRightToLeftDiagonalWin(){
         let isWin
         let tempArr = []
@@ -120,9 +123,5 @@ const gameBoard = (() => {
         return isWin
     }
 
-
-
-
-
-    return {takeUserChoice, displayBoard, gameWon}
+    return {takeUserChoice, displayBoard, gameWon, areAllCellsOccupied}
 })();
