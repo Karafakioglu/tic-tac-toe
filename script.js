@@ -14,10 +14,24 @@ const gameBoard = (() => {
         // [null, null, null],
         // [null, null, null]
 
-        ["X", "X", "X"],
-        ["X", "X", "X"],
-        ["X", "X", "X"]
+        ["X", null, null],
+        [null, "O", null],
+        [null, null, null]
     ]
+
+    function hasGameEnded(){
+        if(areAllCellsOccupied() && gameWon()){
+            return "winner"
+        }
+        else if(areAllCellsOccupied() && !gameWon()){
+            return "tie"
+        }else if(!areAllCellsOccupied() && gameWon()){
+            return "winner"
+        }
+        else{
+            return
+        }
+    }
 
     function areAllCellsOccupied(){
         let flatArr = board.flat()
@@ -123,5 +137,10 @@ const gameBoard = (() => {
         return isWin
     }
 
-    return {takeUserChoice, displayBoard, gameWon, areAllCellsOccupied}
+    return {takeUserChoice, displayBoard, gameWon, areAllCellsOccupied, hasGameEnded}
 })();
+
+
+const gameState = (() =>{
+
+})()
