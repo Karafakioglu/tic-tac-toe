@@ -2,11 +2,6 @@
 // gameboard → IIFE, tahtayı ve tahtaya dair soruları sahipleniyor
 // gameState → IIFE, sıra kimde ve oyun bitti mi
 
-
-function createPlayer(name, sign){
-    return {name,sign}
-}
-
 const gameBoard = (() => {
    let board = 
     [
@@ -14,8 +9,8 @@ const gameBoard = (() => {
         // [null, null, null],
         // [null, null, null]
 
-        ["X", null, null],
-        [null, "O", null],
+        [null, null, null],
+        [null, null, null],
         [null, null, null]
     ]
 
@@ -140,7 +135,55 @@ const gameBoard = (() => {
     return {takeUserChoice, displayBoard, gameWon, areAllCellsOccupied, hasGameEnded}
 })();
 
-
 const gameState = (() =>{
+    console.log(`Please create 2 players by using gameState.createPlayer("name", "sign"). For example gameState.createPlayer("ismail", "X")`)
 
+    let players = []
+    let activePlayer
+
+    const createPlayer = (name,sign) =>{
+        players.push({name,sign})
+    }
+
+    const setActivePlayer = () =>{
+        activePlayer = players[0]
+    }
+
+    const getActivePlayer = () => activePlayer
+
+    const switchPlayer = () => {
+        if(activePlayer === players[0]){
+            activePlayer = players[1]
+        }else{
+            activePlayer = players[0]
+        }
+    }
+
+    const displayBoard = () =>{
+        gameBoard.displayBoard()
+    }
+
+    const startGame = () =>{
+        setActivePlayer()
+        console.log(`It is ${getActivePlayer().name}'s turn.`)
+        displayBoard()
+    }
+
+    const playRound = (row,column) =>{
+        console.log(`It is ${getActivePlayer().name}'s turn.`)
+        gameBoard.takeUserChoice(row,column,getActivePlayer().sign)
+        displayBoard()
+        console.log(
+            `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
+        )
+        switchPlayer()
+    }
+
+
+
+
+    
+
+
+    return {createPlayer,getActivePlayer,startGame, playRound}
 })()
