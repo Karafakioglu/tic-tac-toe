@@ -1,14 +1,6 @@
-// oyuncu → factory, iki instance
-// gameboard → IIFE, tahtayı ve tahtaya dair soruları sahipleniyor
-// gameState → IIFE, sıra kimde ve oyun bitti mi
-
 const gameBoard = (() => {
    let board = 
     [
-        // [null, null, null],
-        // [null, null, null],
-        // [null, null, null]
-
         [null, null, null],
         [null, null, null],
         [null, null, null]
@@ -141,7 +133,7 @@ const gameState = (() =>{
 
     let players = []
     let activePlayer
-    let hasGameEnded = false
+    let isGameLocked = false
 
     const createPlayer = (name,sign) =>{
         players.push({name,sign})
@@ -171,18 +163,8 @@ const gameState = (() =>{
         displayBoard()
     }
 
-    // const playRound = (row,column) =>{
-    //     console.log(`It is ${getActivePlayer().name}'s turn.`)
-    //     gameBoard.takeUserChoice(row,column,getActivePlayer().sign)
-    //     displayBoard()
-    //     console.log(
-    //         `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
-    //     )
-    //     switchPlayer()
-    // }
-
     const playRound = (row,column) =>{
-        if(hasGameEnded){
+        if(isGameLocked){
             return
         }else{
             console.log(`It is ${getActivePlayer().name}'s turn.`)
@@ -196,31 +178,20 @@ const gameState = (() =>{
                 )
                 displayBoard()
 
-
                 console.log("---------------------------------------------")
-
 
                 if(gameBoard.hasGameEnded() === "winner"){
                     console.log(`The game has ended. The winner is ${getActivePlayer().name}.`)
-                    hasGameEnded = true
+                    isGameLocked = true
                 }
                 else if(gameBoard.hasGameEnded() === "tie"){
                     console.log(`The game has ended. It is a tie`)
-                    hasGameEnded = true
+                    isGameLocked = true
                 }
                 switchPlayer()
             }
-            
         }
-
-        
     }
-
-
-
-
-    
-
 
     return {createPlayer,getActivePlayer,startGame, playRound}
 })()
