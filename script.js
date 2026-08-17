@@ -37,8 +37,9 @@ const gameBoard = (() => {
     function takeUserChoice(row, column, sign){
         if(checkIfCellEmpty(row,column)){
             board[row][column] = sign
+            return true
         }else{
-            console.error("This cell is already occupied");
+            return false
             
         }
 
@@ -140,6 +141,7 @@ const gameState = (() =>{
 
     let players = []
     let activePlayer
+    let hasGameEnded = false
 
     const createPlayer = (name,sign) =>{
         players.push({name,sign})
@@ -169,14 +171,49 @@ const gameState = (() =>{
         displayBoard()
     }
 
+    // const playRound = (row,column) =>{
+    //     console.log(`It is ${getActivePlayer().name}'s turn.`)
+    //     gameBoard.takeUserChoice(row,column,getActivePlayer().sign)
+    //     displayBoard()
+    //     console.log(
+    //         `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
+    //     )
+    //     switchPlayer()
+    // }
+
     const playRound = (row,column) =>{
-        console.log(`It is ${getActivePlayer().name}'s turn.`)
-        gameBoard.takeUserChoice(row,column,getActivePlayer().sign)
-        displayBoard()
-        console.log(
-            `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
-        )
-        switchPlayer()
+        if(hasGameEnded){
+            return
+        }else{
+            console.log(`It is ${getActivePlayer().name}'s turn.`)
+            if(!gameBoard.takeUserChoice(row,column,getActivePlayer().sign)){
+                console.log(`This cell is already occupied!`)
+                return
+            }
+            else{
+                console.log(
+                `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
+                )
+                displayBoard()
+
+
+                console.log("---------------------------------------------")
+
+
+                if(gameBoard.hasGameEnded() === "winner"){
+                    console.log(`The game has ended. The winner is ${getActivePlayer().name}.`)
+                    hasGameEnded = true
+                }
+                else if(gameBoard.hasGameEnded() === "tie"){
+                    console.log(`The game has ended. It is a tie`)
+                    hasGameEnded = true
+                }
+                switchPlayer()
+            }
+            
+        }
+
+        
     }
 
 
