@@ -1,9 +1,9 @@
 const gameBoard = (() => {
    let board = 
     [
-        [1, null, null],
-        [null, null, null],
-        [null, null, null]
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
     ]
 
     function hasGameEnded(){
@@ -66,7 +66,7 @@ const gameBoard = (() => {
     // }
 
     function returnBoardCopy(){
-        // debugger
+        // can use structuredClone as well but would like to keep for loop as I can see why and how it works.
         let boardCopy = []
         for(let i = 0; i < board.length; i++){
             boardCopy.push([])
@@ -211,13 +211,25 @@ const gameState = (() =>{
 const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
     const board = gameBoard
+    
 
     function drawBoard(){
-        console.log(board.displayBoard())
-        for (let i = 0; i < board.length; i++) {
-            
-            
+        const boardCopy = gameBoard.returnBoardCopy()
+        for(let i = 0; i < boardCopy.length; i++){
+            // const boardRowElement = document.createElement("div")
+            // boardRowElement.setAttribute("class", "board-row-div")
+            // boardElement.append(boardRowElement)
+            for(let j = 0; j < boardCopy[i].length; j++){
+                const boardCellElement = document.createElement("div");
+                boardCellElement.setAttribute("class", "board-cell-div")
+                boardCellElement.innerText = boardCopy[i][j]
+                // boardRowElement.append(boardCellElement)
+                boardElement.append(boardCellElement)
+            }
         }
     }
+
     return {drawBoard}
 })()
+
+handleDOM.drawBoard()
