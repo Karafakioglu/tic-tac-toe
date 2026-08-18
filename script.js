@@ -1,7 +1,7 @@
 const gameBoard = (() => {
    let board = 
     [
-        [null, null, null],
+        [1, null, null],
         [null, null, null],
         [null, null, null]
     ]
@@ -45,24 +45,36 @@ const gameBoard = (() => {
     }
 
     //Displays the board to be able to play it in console - Delete after UI implementation
-    function displayBoard(){
-        for (let i = 0; i < board.length; i++) {
-            let displayRow = ""
+    // function displayBoard(){
+    //     for (let i = 0; i < board.length; i++) {
+    //         let displayRow = ""
             
-            for (let j = 0; j < board[i].length; j++) {
+    //         for (let j = 0; j < board[i].length; j++) {
                 
-                if(board[i][j] === null){
-                    displayRow += " ."
-                }
-                else{
-                    displayRow += (" " + board[i][j])
+    //             if(board[i][j] === null){
+    //                 displayRow += " ."
+    //             }
+    //             else{
+    //                 displayRow += (" " + board[i][j])
 
-                }
-                displayRow += " |"
-            }
-            console.log(displayRow)
-        }
+    //             }
+    //             displayRow += " |"
+    //         }
+    //         console.log(displayRow)
+    //     }
         
+    // }
+
+    function returnBoardCopy(){
+        // debugger
+        let boardCopy = []
+        for(let i = 0; i < board.length; i++){
+            boardCopy.push([])
+            for (let j = 0; j < board[i].length; j++) {
+                boardCopy[i][j] = board[i][j]
+            }
+        }
+        return boardCopy
     }
 
     function gameWon(){
@@ -125,7 +137,7 @@ const gameBoard = (() => {
         return isWin
     }
 
-    return {takeUserChoice, displayBoard, gameWon, areAllCellsOccupied, hasGameEnded}
+    return {takeUserChoice, gameWon, areAllCellsOccupied, hasGameEnded, returnBoardCopy}
 })();
 
 const gameState = (() =>{
@@ -194,4 +206,18 @@ const gameState = (() =>{
     }
 
     return {createPlayer,getActivePlayer,startGame, playRound}
+})()
+
+const handleDOM = (() =>{
+    const boardElement = document.getElementById("board")
+    const board = gameBoard
+
+    function drawBoard(){
+        console.log(board.displayBoard())
+        for (let i = 0; i < board.length; i++) {
+            
+            
+        }
+    }
+    return {drawBoard}
 })()
