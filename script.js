@@ -214,6 +214,7 @@ const handleDOM = (() =>{
     
 
     function drawBoard(){
+        cleanBoard()
         const boardCopy = gameBoard.returnBoardCopy()
         for(let i = 0; i < boardCopy.length; i++){
             // const boardRowElement = document.createElement("div")
@@ -227,6 +228,10 @@ const handleDOM = (() =>{
                 boardElement.append(boardCellElement)
             }
         }
+    }
+
+    function cleanBoard(){
+        boardElement.innerText = ""
     }
 
     return {drawBoard}
