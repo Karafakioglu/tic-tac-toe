@@ -1,9 +1,14 @@
 const gameBoard = (() => {
    let board = 
     [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
+        // [null, null, null],
+        // [null, null, null],
+        // [null, null, null]
+
+
+        ["X", "O", "X"],
+        ["X", "X", "X"],
+        ["O", "O", "X"]
     ]
 
     function hasGameEnded(){
@@ -211,30 +216,77 @@ const gameState = (() =>{
 const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
     const board = gameBoard
+
+    let hasGameStarted = false
+    
     
 
     function drawBoard(){
+        // if(hasGameStarted){
+        //     cleanBoard()
+        // }
         cleanBoard()
         const boardCopy = gameBoard.returnBoardCopy()
+        const boardElement = document.createElement("div")
+
+        boardElement.setAttribute("id", "board")
+
         for(let i = 0; i < boardCopy.length; i++){
-            // const boardRowElement = document.createElement("div")
-            // boardRowElement.setAttribute("class", "board-row-div")
-            // boardElement.append(boardRowElement)
             for(let j = 0; j < boardCopy[i].length; j++){
+
                 const boardCellElement = document.createElement("div");
+
                 boardCellElement.setAttribute("class", "board-cell-div")
+
                 boardCellElement.innerText = boardCopy[i][j]
-                // boardRowElement.append(boardCellElement)
                 boardElement.append(boardCellElement)
+                document.body.append(boardElement)
+                
             }
         }
     }
 
     function cleanBoard(){
-        boardElement.innerText = ""
+        // boardElement.innerText = ""
+        document.body.innerHTML = null
     }
 
-    return {drawBoard}
+    function takeUserInput(){
+        const cells = document.querySelectorAll(".board-cell-div")
+        const activePlayer = gameState.getActivePlayer()
+
+        for(let i = 0; i < cells.length; i++){
+            let cell = cells[i]
+            cell.addEventListener("click", (e) =>{
+                console.log(e.target.innerText)
+                console.log(i)
+            })
+        }
+
+        // for (const cell of cells){
+        //     if(cell.matches(".board-cell-div")){
+        //         cell.addEventListener("click", (e) =>{
+        //             console.log(e.target.innerText)
+        //         })
+        //     }
+        // }
+    }
+
+    function gameStartMenu(){
+        const welcomeHeader = document.createElement("h1")
+        welcomeHeader.innerText = "Welcome to Tic-Tac-Toe Game"
+
+        const mainGameStartButton = document.createElement("button")
+        mainGameStartButton.innerText = "Start game"
+
+        document.body.append(welcomeHeader)
+        document.body.append(mainGameStartButton)
+
+
+    }
+
+    return {drawBoard, takeUserInput,cleanBoard, gameStartMenu}
 })()
 
-handleDOM.drawBoard()
+// handleDOM.drawBoard()
+// handleDOM.takeUserInput()

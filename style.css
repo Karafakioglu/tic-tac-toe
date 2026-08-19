@@ -14,3 +14,14 @@
     height: 100%;
     text-align: center;
 }
+
+.board-cell-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-cell-div > p{
+  margin: 0;
+  padding: 0;
+}
