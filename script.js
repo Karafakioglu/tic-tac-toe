@@ -282,11 +282,18 @@ const handleDOM = (() =>{
         document.body.append(welcomeHeader)
         document.body.append(mainGameStartButton)
 
+        mainGameStartButton.addEventListener("click", () =>{
+            cleanBoard()
+            console.log("x")
 
+        })
     }
+
+
 
     return {drawBoard, takeUserInput,cleanBoard, gameStartMenu}
 })()
 
 // handleDOM.drawBoard()
 // handleDOM.takeUserInput()
+handleDOM.gameStartMenu()
