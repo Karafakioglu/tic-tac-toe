@@ -49,27 +49,6 @@ const gameBoard = (() => {
             return false 
     }
 
-    //Displays the board to be able to play it in console - Delete after UI implementation
-    // function displayBoard(){
-    //     for (let i = 0; i < board.length; i++) {
-    //         let displayRow = ""
-            
-    //         for (let j = 0; j < board[i].length; j++) {
-                
-    //             if(board[i][j] === null){
-    //                 displayRow += " ."
-    //             }
-    //             else{
-    //                 displayRow += (" " + board[i][j])
-
-    //             }
-    //             displayRow += " |"
-    //         }
-    //         console.log(displayRow)
-    //     }
-        
-    // }
-
     function returnBoardCopy(){
         // can use structuredClone as well but would like to keep for loop as I can see why and how it works.
         let boardCopy = []
@@ -170,10 +149,6 @@ const gameState = (() =>{
         }
     }
 
-    // const displayBoard = () =>{
-    //     gameBoard.displayBoard()
-    // }
-
     const startGame = () =>{
         setActivePlayer()
         console.log(`It is ${getActivePlayer().name}'s turn.`)
@@ -193,7 +168,6 @@ const gameState = (() =>{
                 console.log(
                 `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
                 )
-                // displayBoard()
 
                 console.log("---------------------------------------------")
 
@@ -215,7 +189,6 @@ const gameState = (() =>{
 
 const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
-    const board = gameBoard
 
     let hasGameStarted = false
     
@@ -227,9 +200,8 @@ const handleDOM = (() =>{
         // }
         cleanBoard()
         const boardCopy = gameBoard.returnBoardCopy()
-        const boardElement = document.createElement("div")
 
-        boardElement.setAttribute("id", "board")
+
 
         for(let i = 0; i < boardCopy.length; i++){
             for(let j = 0; j < boardCopy[i].length; j++){
@@ -240,15 +212,13 @@ const handleDOM = (() =>{
 
                 boardCellElement.innerText = boardCopy[i][j]
                 boardElement.append(boardCellElement)
-                document.body.append(boardElement)
                 
             }
         }
     }
 
     function cleanBoard(){
-        // boardElement.innerText = ""
-        document.body.innerHTML = null
+        boardElement.innerHTML = null
     }
 
     function takeUserInput(){
@@ -256,40 +226,28 @@ const handleDOM = (() =>{
         let row
         let column
 
-        const cells = document.querySelectorAll(".board-cell-div")
         const activePlayer = gameState.getActivePlayer()
 
-        
-        for(let i = 0; i < cells.length; i++){
-            let cell = cells[i]
-            cell.addEventListener("click", (e) =>{
-                console.log(e.target.innerText)
-                console.log(i)
+        boardElement.addEventListener("click", (e) =>{
+            let index = Array.from(boardElement.children).indexOf(e.target)
+            if(Math.floor(index/3) === 0){
+                row = 0
+                column = index%3
+            }
+            else if(Math.floor(index/3) ===1){
+                row = 1
+                column = index%3
+            }
+            else{
+                row = 2
+                column = index%3
+            }
+            
+            gameState.playRound(row,column)
+            drawBoard()
 
-                if(Math.floor(i/3) === 0){
-                    row = 0
-                    column = i%3
-                }
-                else if(Math.floor(i/3) ===1){
-                    row = 1
-                    column = i%3
-                }
-                else{
-                    row = 2
-                    column = i%3
-                }
-                gameState.playRound(row,column)
-                // drawBoard()
-            })
-        }
+        })
 
-        // for (const cell of cells){
-        //     if(cell.matches(".board-cell-div")){
-        //         cell.addEventListener("click", (e) =>{
-        //             console.log(e.target.innerText)
-        //         })
-        //     }
-        // }
     }
 
     function startGame(){
