@@ -189,6 +189,7 @@ const gameState = (() =>{
 
 const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
+    const gameStartMenuElement = document.getElementById("game-start-menu")
 
     let hasGameStarted = false
     
@@ -252,9 +253,13 @@ const handleDOM = (() =>{
 
     function startGame(){
         const startGameBtn = document.getElementById("start-game-button")
-        
+        boardElement.style.display = "none"
         
         startGameBtn.addEventListener("click", (e) => {
+            boardElement.style.display = "grid"
+
+            gameStartMenuElement.style.display = "none"
+
             let firstPlayerName = document.getElementById("first-player-name").value;
             let firstPlayerSign
             
