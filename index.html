@@ -8,11 +8,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- <div id="board-container">
-        <div id="board">
+    <div id="game-start-menu">
+        <h1>Welcome to Tic-Tac-Toe Game</h1>
+        <form action="">
+            <div id="first-player-div">
+                <div>
+                    <label for="first-player-name">First Player Name:</label>
+                    <input type="text" id="first-player-name"> 
+                </div>
+                <div>
+                    <input type="radio" name="sign" value="X" id="XSign">
+                    <label for="XSign">X</label>
 
-        </div>
-        
-    </div> -->
+                    <input type="radio" name="sign" value="O" id="OSign">
+                    <label for="OSign">O</label>
+                </div>
+            </div>
+            <div>
+                <div id="second-player-div">
+                    <label for="second-player-name">Second Player Name:</label>
+                    <input type="text" id="second-player-name">
+                </div>
+            </div>
+            <button id="start-game-button">Start Game</button>
+        </form>
+    </div>
 </body>
 </html>

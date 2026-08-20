@@ -272,28 +272,45 @@ const handleDOM = (() =>{
         // }
     }
 
-    function gameStartMenu(){
-        const welcomeHeader = document.createElement("h1")
-        welcomeHeader.innerText = "Welcome to Tic-Tac-Toe Game"
+    function startGame(){
+        const startGameBtn = document.getElementById("start-game-button")
+        
+        
+        startGameBtn.addEventListener("click", (e) => {
+            let firstPlayerName = document.getElementById("first-player-name").value;
+            let firstPlayerSign
+            
+            let secondPlayerName = document.getElementById("second-player-name").value;
+            let secondPlayerSign
+            
 
-        const mainGameStartButton = document.createElement("button")
-        mainGameStartButton.innerText = "Start game"
+            const radioButtons = document.getElementsByName("sign")
+            for(let i = 0; i < radioButtons.length; i++){
+                if(radioButtons[i].checked){
+                    // e.preventDefault()
+                    firstPlayerSign = radioButtons[i].value
+                }
+            }
 
-        document.body.append(welcomeHeader)
-        document.body.append(mainGameStartButton)
+            if(firstPlayerSign === "X")
+                secondPlayerSign = "O"
+            else
+                secondPlayerSign = "X"
 
-        mainGameStartButton.addEventListener("click", () =>{
-            cleanBoard()
-            console.log("x")
-
+            gameState.createPlayer(firstPlayerName, firstPlayerSign);
+            gameState.createPlayer(secondPlayerName, secondPlayerSign)
+            e.preventDefault()
+            drawBoard()
+            
         })
+
     }
 
 
 
-    return {drawBoard, takeUserInput,cleanBoard, gameStartMenu}
+    return {drawBoard, takeUserInput,cleanBoard, startGame}
 })()
 
 // handleDOM.drawBoard()
 // handleDOM.takeUserInput()
-handleDOM.gameStartMenu()
+handleDOM.startGame()
