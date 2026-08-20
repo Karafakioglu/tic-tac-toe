@@ -1,14 +1,14 @@
 const gameBoard = (() => {
    let board = 
     [
-        // [null, null, null],
-        // [null, null, null],
-        // [null, null, null]
+        [null, null, null],
+        [null, null, null],
+        [null, null, null]
 
 
-        ["X", "O", "X"],
-        ["X", "X", "X"],
-        ["O", "O", "X"]
+        // ["X", "O", "X"],
+        // ["X", "X", "X"],
+        // ["O", "O", "X"]
     ]
 
     function hasGameEnded(){
@@ -170,14 +170,14 @@ const gameState = (() =>{
         }
     }
 
-    const displayBoard = () =>{
-        gameBoard.displayBoard()
-    }
+    // const displayBoard = () =>{
+    //     gameBoard.displayBoard()
+    // }
 
     const startGame = () =>{
         setActivePlayer()
         console.log(`It is ${getActivePlayer().name}'s turn.`)
-        displayBoard()
+        // displayBoard()
     }
 
     const playRound = (row,column) =>{
@@ -193,7 +193,7 @@ const gameState = (() =>{
                 console.log(
                 `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
                 )
-                displayBoard()
+                // displayBoard()
 
                 console.log("---------------------------------------------")
 
@@ -252,14 +252,34 @@ const handleDOM = (() =>{
     }
 
     function takeUserInput(){
+        gameState.startGame()
+        let row
+        let column
+
         const cells = document.querySelectorAll(".board-cell-div")
         const activePlayer = gameState.getActivePlayer()
 
+        
         for(let i = 0; i < cells.length; i++){
             let cell = cells[i]
             cell.addEventListener("click", (e) =>{
                 console.log(e.target.innerText)
                 console.log(i)
+
+                if(Math.floor(i/3) === 0){
+                    row = 0
+                    column = i%3
+                }
+                else if(Math.floor(i/3) ===1){
+                    row = 1
+                    column = i%3
+                }
+                else{
+                    row = 2
+                    column = i%3
+                }
+                gameState.playRound(row,column)
+                // drawBoard()
             })
         }
 
@@ -301,16 +321,13 @@ const handleDOM = (() =>{
             gameState.createPlayer(secondPlayerName, secondPlayerSign)
             e.preventDefault()
             drawBoard()
+            takeUserInput()
             
         })
-
     }
-
-
 
     return {drawBoard, takeUserInput,cleanBoard, startGame}
 })()
 
-// handleDOM.drawBoard()
-// handleDOM.takeUserInput()
+
 handleDOM.startGame()
