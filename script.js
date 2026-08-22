@@ -196,6 +196,7 @@ const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
     const gameStartMenuElement = document.getElementById("game-start-menu")
     const placeholderElement = document.getElementById("placeholder")
+    const restartGameButton = document.getElementById("restart-game-button")
 
     function drawBoard(){
         cleanBoard()
@@ -261,9 +262,11 @@ const handleDOM = (() =>{
         }
         else if(returnedGameState.status === "winner"){
             placeholderElement.innerText = `Game has ended. Winner is ${returnedGameState.player.name}`
+            restartGameButton.style.display = "inline-block"
         }
         else if(returnedGameState.status === "tie"){
             placeholderElement.innerText = `Game has ended with a tie!`
+            restartGameButton.style.display = "inline-block"
         }
         else if(returnedGameState.status === "occupied"){
             placeholderElement.innerText = "Illegal move! This cell is already occupied."
@@ -283,6 +286,7 @@ const handleDOM = (() =>{
     function startGame(){
         const startGameBtn = document.getElementById("start-game-button")
         boardElement.style.display = "none"
+        restartGameButton.style.display = "none"
         
         startGameBtn.addEventListener("click", (e) => {
             boardElement.style.display = "grid"
