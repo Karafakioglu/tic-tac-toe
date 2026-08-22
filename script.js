@@ -149,47 +149,53 @@ const gameState = (() =>{
         }
     }
 
-    const startGame = () =>{
-        setActivePlayer()
-        console.log(`It is ${getActivePlayer().name}'s turn.`)
-        // displayBoard()
-    }
-
     const playRound = (row,column) =>{
         if(isGameLocked){
-            return
+            return {
+                status: "locked"
+            }
         }else{
-            console.log(`It is ${getActivePlayer().name}'s turn.`)
+
             if(!gameBoard.takeUserChoice(row,column,getActivePlayer().sign)){
-                console.log(`This cell is already occupied!`)
-                return
+                return {status: "occupied"}
             }
             else{
-                console.log(
-                `Player ${getActivePlayer().name} has played ${getActivePlayer().sign} into row ${row} and into column ${column}`
-                )
 
-                console.log("---------------------------------------------")
 
                 if(gameBoard.hasGameEnded() === "winner"){
-                    console.log(`The game has ended. The winner is ${getActivePlayer().name}.`)
                     isGameLocked = true
+                    return {
+                        status: "winner", player: getActivePlayer()
+                    }
+                    
                 }
                 else if(gameBoard.hasGameEnded() === "tie"){
-                    console.log(`The game has ended. It is a tie`)
                     isGameLocked = true
+                    return{
+                        status: "tie"
+                    }
+                    
                 }
+                const currentPlayer = getActivePlayer()
                 switchPlayer()
+                    return {
+                        status: "continue",
+                        playedBy: currentPlayer,
+                        nextPlayer: getActivePlayer(),
+                        row,
+                        column
+                }
             }
         }
     }
 
-    return {createPlayer,getActivePlayer,startGame, playRound}
+    return {createPlayer,getActivePlayer, setActivePlayer, playRound}
 })()
 
 const handleDOM = (() =>{
     const boardElement = document.getElementById("board")
     const gameStartMenuElement = document.getElementById("game-start-menu")
+    const placeholderElement = document.getElementById("placeholder")
 
     let hasGameStarted = false
     
@@ -223,11 +229,11 @@ const handleDOM = (() =>{
     }
 
     function takeUserInput(){
-        gameState.startGame()
         let row
         let column
 
-        const activePlayer = gameState.getActivePlayer()
+        let activePlayer = gameState.getActivePlayer()
+        placeholderElement.innerText = `It is ${activePlayer.name}'s turn with sign: ${activePlayer.sign}`
 
         boardElement.addEventListener("click", (e) =>{
             let index = Array.from(boardElement.children).indexOf(e.target)
@@ -244,12 +250,31 @@ const handleDOM = (() =>{
                 column = index%3
             }
             
-            gameState.playRound(row,column)
+            let returnedGameState = gameState.playRound(row,column)
+
+            if(returnedGameState.status === "continue"){
+                placeholderElement.innerText = `${returnedGameState.playedBy.name} played at row: ${row}, column: ${column} with sign ${returnedGameState.playedBy.sign}. Next turn is ${returnedGameState.nextPlayer.name} with sign ${returnedGameState.nextPlayer.sign}`
+            }
+            else if(returnedGameState.status === "winner"){
+                placeholderElement.innerText = `Game has ended. Winner is ${returnedGameState.player.name}`
+            }
+            else if(returnedGameState.status === "tie"){
+                placeholderElement.innerText = `Game has ended with a tie!`
+            }
+            else if(returnedGameState.status === "occupied"){
+                placeholderElement.innerText = "Illegal move! This cell is already occupied."
+            }
+            else if(returnedGameState.status === "locked"){
+                placeholderElement.innerText = "Cannot make any other moves. Game has ended"
+            }
+
+            console.log(returnedGameState)
             drawBoard()
 
         })
 
     }
+
 
     function startGame(){
         const startGameBtn = document.getElementById("start-game-button")
@@ -284,6 +309,7 @@ const handleDOM = (() =>{
             gameState.createPlayer(secondPlayerName, secondPlayerSign)
             e.preventDefault()
             drawBoard()
+            gameState.setActivePlayer()
             takeUserInput()
             
         })
