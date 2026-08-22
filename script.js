@@ -197,17 +197,9 @@ const handleDOM = (() =>{
     const gameStartMenuElement = document.getElementById("game-start-menu")
     const placeholderElement = document.getElementById("placeholder")
 
-    let hasGameStarted = false
-    
-    
-
     function drawBoard(){
-        // if(hasGameStarted){
-        //     cleanBoard()
-        // }
         cleanBoard()
         const boardCopy = gameBoard.returnBoardCopy()
-
 
 
         for(let i = 0; i < boardCopy.length; i++){
@@ -229,51 +221,63 @@ const handleDOM = (() =>{
     }
 
     function takeUserInput(){
-        let row
-        let column
-
         let activePlayer = gameState.getActivePlayer()
         placeholderElement.innerText = `It is ${activePlayer.name}'s turn with sign: ${activePlayer.sign}`
 
-        boardElement.addEventListener("click", (e) =>{
-            let index = Array.from(boardElement.children).indexOf(e.target)
-            if(Math.floor(index/3) === 0){
-                row = 0
-                column = index%3
-            }
-            else if(Math.floor(index/3) ===1){
-                row = 1
-                column = index%3
-            }
-            else{
-                row = 2
-                column = index%3
-            }
-            
-            let returnedGameState = gameState.playRound(row,column)
+        boardElement.addEventListener("click", function(event){
+            let coords = findRowAndColumn(event)
 
-            if(returnedGameState.status === "continue"){
-                placeholderElement.innerText = `${returnedGameState.playedBy.name} played at row: ${row}, column: ${column} with sign ${returnedGameState.playedBy.sign}. Next turn is ${returnedGameState.nextPlayer.name} with sign ${returnedGameState.nextPlayer.sign}`
-            }
-            else if(returnedGameState.status === "winner"){
-                placeholderElement.innerText = `Game has ended. Winner is ${returnedGameState.player.name}`
-            }
-            else if(returnedGameState.status === "tie"){
-                placeholderElement.innerText = `Game has ended with a tie!`
-            }
-            else if(returnedGameState.status === "occupied"){
-                placeholderElement.innerText = "Illegal move! This cell is already occupied."
-            }
-            else if(returnedGameState.status === "locked"){
-                placeholderElement.innerText = "Cannot make any other moves. Game has ended"
-            }
-
-            console.log(returnedGameState)
-            drawBoard()
-
+            displayRoundStatus(coords.row, coords.column)
         })
 
     }
+
+    function findRowAndColumn(event){
+        let row
+        let column
+        
+        let index = Array.from(boardElement.children).indexOf(event.target)
+        if(Math.floor(index/3) === 0){
+            row = 0
+            column = index%3
+        }
+        else if(Math.floor(index/3) ===1){
+            row = 1
+            column = index%3
+        }
+        else{
+            row = 2
+            column = index%3
+        }
+
+        return {row,column}
+    }
+
+    function displayRoundStatus(row, column){
+        let returnedGameState = gameState.playRound(row,column)
+
+        if(returnedGameState.status === "continue"){
+            placeholderElement.innerText = `${returnedGameState.playedBy.name} played at row: ${row}, column: ${column} with sign ${returnedGameState.playedBy.sign}. Next turn is ${returnedGameState.nextPlayer.name} with sign ${returnedGameState.nextPlayer.sign}`
+        }
+        else if(returnedGameState.status === "winner"){
+            placeholderElement.innerText = `Game has ended. Winner is ${returnedGameState.player.name}`
+        }
+        else if(returnedGameState.status === "tie"){
+            placeholderElement.innerText = `Game has ended with a tie!`
+        }
+        else if(returnedGameState.status === "occupied"){
+            placeholderElement.innerText = "Illegal move! This cell is already occupied."
+        }
+        else if(returnedGameState.status === "locked"){
+            placeholderElement.innerText = "Cannot make any other moves. Game has ended"
+        }
+
+        console.log(returnedGameState)
+        drawBoard()
+
+
+    }
+
 
 
     function startGame(){
@@ -295,7 +299,6 @@ const handleDOM = (() =>{
             const radioButtons = document.getElementsByName("sign")
             for(let i = 0; i < radioButtons.length; i++){
                 if(radioButtons[i].checked){
-                    // e.preventDefault()
                     firstPlayerSign = radioButtons[i].value
                 }
             }
