@@ -4,6 +4,10 @@ const gameBoard = (() => {
         [null, null, null],
         [null, null, null],
         [null, null, null]
+
+        // ["X", "O", "X"],
+        // ["X", "O", "O"],
+        // ["O", "X", "X"]
     ]
 
     function resetBoard(){
@@ -13,6 +17,20 @@ const gameBoard = (() => {
             [null, null, null]
         ]
     }
+
+    let winningCombination = [
+        [[0,0], [0,1], [0,2]],
+        [[1,0], [1,1], [1,2]],
+        [[2,0], [2,1], [2,2]],
+
+        [[0,0], [1,0], [2,0]],
+        [[0,1], [1,1], [2,1]],
+        [[0,2], [1,2], [2,2]],
+
+        [[0,0], [1,1], [2,2]],
+
+        [[0,2], [1,1], [2,0]]
+    ]
 
     function hasGameEnded(){
         if(areAllCellsOccupied() && gameWon()){
@@ -65,7 +83,7 @@ const gameBoard = (() => {
     }
 
     function gameWon(){
-        return isRowWin() || isColumnWin() || isLeftToRightDiagonalWin() || isRightToLeftDiagonalWin()
+        return combinationCheck()
     }
 
     function hasWon (tempArr){
@@ -77,59 +95,22 @@ const gameBoard = (() => {
         return tempArr.every(isSame)
     }
 
-    function isRowWin(){
-        let isWin
-        for (let i = 0; i < board.length; i++) {
+    function combinationCheck(){
+        for(let i = 0; i < winningCombination.length; i++){
             let tempArr = []
-            for(let j = 0; j< board[i].length; j++){
-                tempArr.push(board[i][j])
+            for(let j = 0; j < winningCombination[i].length; j++){
+                tempArr.push(board[winningCombination[i][j][0]][winningCombination[i][j][1]])     
             }
-            
-            isWin = isWin || hasWon(tempArr)
+            if(hasWon(tempArr))
+                return true
         }
-        return isWin
-
-    }
-
-    function isColumnWin(){    
-        let isWin
-        for (let i = 0; i < board.length; i++){
-            let tempArr = []
-            for(let j = 0; j < board[i].length; j ++){
-                tempArr.push(board[j][i])
-            }
-            isWin = isWin || hasWon(tempArr)
-        }
-        return isWin
-    }
-
-    function isLeftToRightDiagonalWin(){
-        let isWin
-        let tempArr = []
-        for(let i = 0; i < board.length; i++){
-            tempArr.push(board[i][i])
-        }
-
-        isWin = isWin || hasWon(tempArr)
-        return isWin
-    }
-
-    function isRightToLeftDiagonalWin(){
-        let isWin
-        let tempArr = []
-        for(let i = 0; i< board.length; i++){
-            tempArr.push(board[i][(board.length - 1) - i])
-        }
-        isWin = isWin || hasWon(tempArr)
-        return isWin
+        return false
     }
 
     return {takeUserChoice, gameWon, areAllCellsOccupied, hasGameEnded, returnBoardCopy, resetBoard}
 })();
 
 const gameState = (() =>{
-    console.log(`Please create 2 players by using gameState.createPlayer("name", "sign"). For example gameState.createPlayer("ismail", "X")`)
-
     let players = []
     let activePlayer
     let isGameLocked = false
@@ -282,7 +263,6 @@ const handleDOM = (() =>{
             placeholderElement.innerText = "Cannot make any other moves. Game has ended"
         }
 
-        console.log(returnedGameState)
         drawBoard()
     }
 
