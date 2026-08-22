@@ -4,12 +4,15 @@ const gameBoard = (() => {
         [null, null, null],
         [null, null, null],
         [null, null, null]
-
-
-        // ["X", "O", "X"],
-        // ["X", "X", "X"],
-        // ["O", "O", "X"]
     ]
+
+    function resetBoard(){
+        board = [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null]
+        ]
+    }
 
     function hasGameEnded(){
         if(areAllCellsOccupied() && gameWon()){
@@ -121,7 +124,7 @@ const gameBoard = (() => {
         return isWin
     }
 
-    return {takeUserChoice, gameWon, areAllCellsOccupied, hasGameEnded, returnBoardCopy}
+    return {takeUserChoice, gameWon, areAllCellsOccupied, hasGameEnded, returnBoardCopy, resetBoard}
 })();
 
 const gameState = (() =>{
@@ -189,7 +192,11 @@ const gameState = (() =>{
         }
     }
 
-    return {createPlayer,getActivePlayer, setActivePlayer, playRound}
+    function resetGameLock(){
+        isGameLocked = false
+    }
+
+    return {createPlayer,getActivePlayer, setActivePlayer, playRound, resetGameLock}
 })()
 
 const handleDOM = (() =>{
@@ -277,8 +284,6 @@ const handleDOM = (() =>{
 
         console.log(returnedGameState)
         drawBoard()
-
-
     }
 
 
@@ -321,6 +326,18 @@ const handleDOM = (() =>{
             
         })
     }
+
+    function restartGame(){
+        gameBoard.resetBoard();
+        gameState.setActivePlayer()
+        gameState.resetGameLock()
+        restartGameButton.style.display = "none"
+        drawBoard()
+        let activePlayer = gameState.getActivePlayer()
+        placeholderElement.innerText = `It is ${activePlayer.name}'s turn with sign: ${activePlayer.sign}`
+    }
+
+    restartGameButton.addEventListener("click", restartGame)
 
     return {drawBoard, takeUserInput,cleanBoard, startGame}
 })()
